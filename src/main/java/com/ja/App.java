@@ -1,4 +1,4 @@
-package org.ja;
+package com.ja;
 
 /**
  * Hello world!
