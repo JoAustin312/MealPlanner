@@ -14,4 +14,21 @@ public class MealPlan {
     private int userId;
     private LocalDate weekStart;
     private LocalDate weekEnd;
+
+    public void setWeekStart(LocalDate weekStart) {
+        if (weekStart == null) {
+            throw new IllegalArgumentException("Week start date cannot be null");
+        }
+        this.weekStart = weekStart;
+    }
+
+    public void setWeekEnd(LocalDate weekEnd) {
+        if (weekEnd == null) {
+            throw new IllegalArgumentException("Week end date cannot be null");
+        }
+        if (weekStart != null && !weekEnd.isAfter(weekStart)) {
+            throw new IllegalArgumentException("Week end date must be after week start date");
+        }
+        this.weekEnd = weekEnd;
+    }
 }
