@@ -53,6 +53,38 @@ public class ServingDAO {
         return servings;
     }
 
+    public void deleteServingsByMealPlanId(int mealPlanId) {
+        String sql = "DELETE FROM planner.servings WHERE meal_plan_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, mealPlanId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Serving> getAllServingsByMealPlanId(int mealPlanId) {
+        List<Serving> servings = new ArrayList<>();
+        String sql = "SELECT * FROM planner.servings WHERE meal_plan_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, mealPlanId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Serving serving = new Serving();
+                serving.setServingId(rs.getInt("serving_id"));
+                serving.setMealPlanId(rs.getInt("meal_plan_id"));
+                serving.setDishId(rs.getInt("dish_id"));
+                serving.setNumberOfServings(rs.getInt("number_of_servings"));
+                servings.add(serving);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return servings;
+    }
+
     public void updateServing(Serving serving) {
         String sql = "UPDATE planner.servings SET meal_plan_id = ?, dish_id = ?, number_of_servings = ? WHERE serving_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();

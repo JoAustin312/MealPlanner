@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +15,7 @@ public class MealPlan {
     private int userId;
     private LocalDate weekStart;
     private LocalDate weekEnd;
+    private List<Serving> servings; // Composition: MealPlan has many Servings
 
     public void setWeekStart(LocalDate weekStart) {
         if (weekStart == null) {

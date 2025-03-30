@@ -10,10 +10,11 @@ import java.util.List;
 public class IngredientDAO {
 
     public void addIngredient(Ingredient ingredient) {
-        String sql = "INSERT INTO planner.ingredients (ingredient_name) VALUES (?)";
+        String sql = "INSERT INTO planner.ingredients (ingredient_name, quantity) VALUES (?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, ingredient.getIngredientName());
+            pstmt.setInt(2, ingredient.getQuantity());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -28,7 +29,11 @@ public class IngredientDAO {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                ingredient = new Ingredient(rs.getInt("ingredient_id"), rs.getString("ingredient_name"));
+                ingredient = new Ingredient(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getInt("quantity")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,7 +48,11 @@ public class IngredientDAO {
              Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
-                ingredients.add(new Ingredient(rs.getInt("ingredient_id"), rs.getString("ingredient_name")));
+                ingredients.add(new Ingredient(
+                        rs.getInt("ingredient_id"),
+                        rs.getString("ingredient_name"),
+                        rs.getInt("quantity")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,11 +61,12 @@ public class IngredientDAO {
     }
 
     public void updateIngredient(Ingredient ingredient) {
-        String sql = "UPDATE planner.ingredients SET ingredient_name = ? WHERE ingredient_id = ?";
+        String sql = "UPDATE planner.ingredients SET ingredient_name = ?, quantity = ? WHERE ingredient_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, ingredient.getIngredientName());
-            pstmt.setInt(2, ingredient.getIngredientId());
+            pstmt.setInt(2, ingredient.getQuantity());
+            pstmt.setInt(3, ingredient.getIngredientId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
